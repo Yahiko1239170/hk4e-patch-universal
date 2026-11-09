@@ -1,0 +1,29 @@
+
+name: Build Windows DLL
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+
+      - name: Compile DLL
+        run: cargo build --release
+
+      - name: Upload compiled DLL
+        uses: actions/upload-artifact@v4
+        with:
+          name: genshin-local-patch
+          path: target/release/ext.dll
+          if-no-files-found: error
